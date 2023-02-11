@@ -29,37 +29,56 @@ def home():
 		data = "hello world"
 		return jsonify({'data': data})
 
-@app.route('/queryALL/')
-def queryALLform():
-	return render_template('queryALL.html')
+# @app.route('/queryALL/')
+# def queryALLform():
+# 	SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+# 	json_url = os.path.join(SITE_ROOT, "static/data", "range_min.json")
+# 	range_min = json.load(open(json_url))
+# 	json_url = os.path.join(SITE_ROOT, "static/data", "range_max.json")
+# 	range_max = json.load(open(json_url))
+# 	return render_template('queryALL.html',range_min=range_min, range_max=range_max)
 
 # query the neural network
-@app.route('/queryALL/', methods = ['POST'])
+@app.route('/queryALL/', methods = ['GET','POST'])
 def queryALL():
-	n = request.form['N']
-	p = request.form['P']
-	k = request.form['K']
-	temp = request.form['temp']
-	humid = request.form['humid']
-	ph = request.form['ph']
-	rain = request.form['rain'] # average annual rainfall
+	if(request.method=='POST'):
+		n = request.form['n']
+		p = request.form['p']
+		k = request.form['k']
+		temp = request.form['temperature']
+		humid = request.form['humidity']
+		ph = request.form['ph']
+		rain = request.form['rainfall'] # average annual rainfall
 
-	X = [[n, p, k, temp, humid, ph, rain]]
-	x = pd.DataFrame(X, columns=head)
+		X = [[n, p, k, temp, humid, ph, rain]]
+		x = pd.DataFrame(X, columns=head)
 
-	prob = grad.predict_proba(x)[0]
-	p = [[targets[str(i)], prob[i]] for i in range(len(prob))]
-	p = sorted(p, key=lambda x: x[1], reverse=True)
+		prob = grad.predict_proba(x)[0]
+		p = [[targets[str(i)], prob[i]] for i in range(len(prob))]
+		p = sorted(p, key=lambda x: x[1], reverse=True)
 
-	return jsonify({'predicted': p[0], 'next 4': p[1:5]})
+		r= {'top': p[0], 'next4': p[1:5]}
+		jsonify(r)
+		print(r)
+		return render_template('recommend.html',r=r)
+	else:
+		SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+		json_url = os.path.join(SITE_ROOT, "static/data", "range_min.json")
+		range_min = json.load(open(json_url))
+		json_url = os.path.join(SITE_ROOT, "static/data", "range_max.json")
+		range_max = json.load(open(json_url))
+		return render_template('queryALL.html',range_min=range_min, range_max=range_max)
 
 @app.route('/queryLD/')
 def queryLDform():
 	SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
 	json_url = os.path.join(SITE_ROOT, "static/data", "location.json")
-	data = json.load(open(json_url))
-
-	return render_template('queryLD.html', loc=data)
+	loc = json.load(open(json_url))
+	json_url = os.path.join(SITE_ROOT, "static/data", "range_min.json")
+	range_min = json.load(open(json_url))
+	json_url = os.path.join(SITE_ROOT, "static/data", "range_max.json")
+	range_max = json.load(open(json_url))
+	return render_template('queryLD.html', loc=loc, range_min=range_min, range_max=range_max)
 
 @app.route('/queryLD/', methods = ['POST'])
 def queryLD():
@@ -67,9 +86,9 @@ def queryLD():
 	state = request.form['state']
 	month = request.form['month']
 	year = request.form['year']
-	n = request.form['N']
-	p = request.form['P']
-	k = request.form['K']
+	n = request.form['n']
+	p = request.form['p']
+	k = request.form['k']
 	ph = request.form['ph']
 
 	month = str(month)
@@ -88,7 +107,7 @@ def queryLD():
 	p = [[targets[str(i)], prob[i]] for i in range(len(prob))]
 	p = sorted(p, key=lambda x: x[1], reverse=True)
 
-	return jsonify({'predicted': p[0], 'next 4': p[1:5]})
+	return jsonify({'predicted': p[0], 'next4': p[1:5]})
 
 
 def getWeather(location, year, month):

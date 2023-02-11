@@ -12,21 +12,21 @@
 
         <form onsubmit="{{ url_for('home') }}" method="post">
 
-            <select id="inputState" onchange="loadDistrict()">
+            <select name="state" id="inputState" onchange="loadDistrict()">
                 <option value="" disabled selected>Select state</option>
                 {% for i in loc.STATES %}
                 <option value="{{i}}">{{i}}</option>
                 {% endfor %}
             </select>
 
-            <select id="inputDistrict">
+            <select name="district" id="inputDistrict">
                 <option value="" disabled selected>Select state first</option>
             </select>
-            <input type="month" id="month" name="trip-start">
-            <input type="number" id="n" placeholder="N">
-            <input type="number" id="p" placeholder="P">
-            <input type="number" id="k" placeholder="K">
-            <input type="number" id="ph" placeholder="pH">
+            <input type="month" name="month" id="month" name="trip-start">
+            <input type="number" name="n" id="n" placeholder="{{range_min['N']|round|int}}-{{range_max['N']|round|int}}">
+            <input type="number" name="p" id="p" placeholder="{{range_min['P']|round|int}}-{{range_max['P']|round|int}}">
+            <input type="number" name="k" id="k" placeholder="{{range_min['K']|round|int}}-{{range_max['K']|round|int}}">
+            <input type="number" name="ph" id="ph" placeholder="{{range_min['ph']|round|int}}-{{range_max['ph']|round|int}}">
             <input type="submit">
             <input type="reset">
     </div>
@@ -40,10 +40,11 @@
         maxdate.setDate(maxdate.getDate()+279);//31*9<300
         var min=mindate.getFullYear()+"-"+mindate.getMonth();
         var max=maxdate.getFullYear()+"-"+maxdate.getMonth();
-        console.log(min);
-        console.log(max);
+        
         document.getElementById("month").setAttribute("min", min);
         document.getElementById("month").setAttribute("max", max);
+        console.log(JSON.parse('{{ range_min | tojson | safe}}'));
+        console.log(max);
         function loadDistrict() {
             var x = document.getElementById("inputState");
             console.log(x.value);

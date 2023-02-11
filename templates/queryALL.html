@@ -11,13 +11,13 @@
     <div class="container">
 
         <form onsubmit="{{ url_for('home') }}" method="post">
-            <input type="number" id="n" placeholder="N">
-            <input type="number" id="p" placeholder="P">
-            <input type="number" id="k" placeholder="K">
-            <input type="number" id="ph" placeholder="pH">
-            <input type="number" id="temp" placeholder="temp">
-            <input type="number" id="humidity" placeholder="humidity">
-            <input type="number" id="rain" placeholder="rain">
+            <input type="number" name="n" id="n" placeholder="{{range_min['N']|round|int}}-{{range_max['N']|round|int}}">
+            <input type="number" name="p" id="p" placeholder="{{range_min['P']|round|int}}-{{range_max['P']|round|int}}">
+            <input type="number" name="k" id="k" placeholder="{{range_min['K']|round|int}}-{{range_max['K']|round|int}}">
+            <input type="number" name="ph" id="ph" placeholder="{{range_min['ph']|round|int}}-{{range_max['ph']|round|int}}">
+            <input type="number" name="temperature" id="temperature" placeholder="{{range_min['temperature']|round|int}}-{{range_max['temperature']|round|int}}">
+            <input type="number" name="humidity" id="humidity" placeholder="{{range_min['humidity']|round|int}}-{{range_max['humidity']|round|int}}">
+            <input type="number" name="rainfall" id="rainfall" placeholder="{{range_min['rainfall']|round|int}}-{{range_max['rainfall']|round|int}}">
             <input type="submit">
             <input type="reset">
     </div>
