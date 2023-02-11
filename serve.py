@@ -68,11 +68,15 @@ def queryLD():
 	w = getWeather(location = district, year = year, month = month)
 	temp = w['avgtemp']
 	humid = w['avghum']
-	X = [n, p, k, temp, humid, ph, rain]
-	print(X)
 
-	res = targets[str(grad.predict([X])[0])]
-	return jsonify({'predicted': res})
+	X = [[n, p, k, temp, humid, ph, rain]]
+	x = pd.DataFrame(X, columns=head)
+
+	prob = grad.predict_proba(x)[0]
+	p = [[targets[str(i)], prob[i]] for i in range(len(prob))]
+	p = sorted(p, key=lambda x: x[1], reverse=True)
+
+	return jsonify({'predicted': p[0], 'next 4': p[1:5]})
 
 
 def getWeather(location, year, month):
