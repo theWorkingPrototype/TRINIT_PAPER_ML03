@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bind SELECT Element with JSON using JavaScript</title>
+    <style>
+      * {font-family: Calibri; font-size: 18px;}
+    </style>
+    <script src=
+    "https://code.jquery.com/jquery-3.5.1.js">
+    </script>
+</head>
+<body>
+
+    <select id="sel" onchange="show(this)">
+        <option value="">-- Select --</option>
+    </select>
+
+</body>
+<script>
+
+    // the json.
+    let birds = [
+      {  "ID": "001",
+        "Bird_Name": "Eurasian Collared-Dove"
+      },
+      { "ID": "002",
+        "Bird_Name": "Bald Eagle"
+      },
+      { "ID": "003",
+        "Bird_Name": "Cooper's Hawk"
+      },
+    ];
+
+    let ele = document.getElementById('sel');
+    for (let i = 0; i < birds.length; i++) {
+      // populate select element with json.
+      ele.innerHTML = ele.innerHTML +
+        '<option value="' + birds[i]['ID'] + '">' + birds[i]['Bird_Name'] + '</option>';
+    }
+
+    $.getJSON("district.json", function(json) {
+
+    console.log(json); // this will show the info it in firebug console
+});
+
+  function show(ele) {
+    // get the selected value from <select> element and show it.
+    let msg = document.getElementById('msg');
+    msg.innerHTML = 'Selected Bird: <b>' + ele.options[ele.selectedIndex].text + '</b> </br>' +
+      'ID: <b>' + ele.value + '</b>';
+  }
+</script>
+</html>

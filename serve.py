@@ -1,8 +1,9 @@
-from flask import Flask, jsonify, request
+from flask import Flask, render_template, url_for, jsonify, request
 import requests
 import pickle
 import json
 import pandas as pd
+import os
 
 URL = 'http://api.weatherapi.com/v1/future.json'
 APIKEY = '49937b2e2ca847928e150828231102'
@@ -28,6 +29,9 @@ def home():
 		data = "hello world"
 		return jsonify({'data': data})
 
+@app.route('/queryALL/')
+def queryALLform():
+	return render_template('queryALL.html')
 
 # query the neural network
 @app.route('/queryALL/', methods = ['POST'])
@@ -48,6 +52,14 @@ def queryALL():
 	p = sorted(p, key=lambda x: x[1], reverse=True)
 
 	return jsonify({'predicted': p[0], 'next 4': p[1:5]})
+
+@app.route('/queryLD/')
+def queryLDform():
+	SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+	json_url = os.path.join(SITE_ROOT, "static/data", "location.json")
+	data = json.load(open(json_url))
+
+	return render_template('queryLD.html', loc=data)
 
 @app.route('/queryLD/', methods = ['POST'])
 def queryLD():

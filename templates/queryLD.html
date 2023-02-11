@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Recommend</title>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/predict_styles.css') }}"> -->
+    
+</head>
+
+<body>
+    <div class="container">
+
+        <form onsubmit="{{ url_for('home') }}" method="post">
+
+            <select id="inputState" onchange="loadDistrict()">
+                <option value="" disabled selected>Select state</option>
+                {% for i in loc.STATES %}
+                <option value="{{i}}">{{i}}</option>
+                {% endfor %}
+            </select>
+
+            <select id="inputDistrict">
+                <option value="" disabled selected>Select state first</option>
+            </select>
+            <input type="month" id="month" name="trip-start">
+            <input type="number" id="n" placeholder="N">
+            <input type="number" id="p" placeholder="P">
+            <input type="number" id="k" placeholder="K">
+            <input type="number" id="ph" placeholder="pH">
+            <input type="submit">
+            <input type="reset">
+    </div>
+    </form>
+    </div>
+</body>
+<footer>
+    <script>
+        var mindate=new Date();
+        var maxdate = new Date();
+        maxdate.setDate(maxdate.getDate()+279);//31*9<300
+        var min=mindate.getFullYear()+"-"+mindate.getMonth();
+        var max=maxdate.getFullYear()+"-"+maxdate.getMonth();
+        console.log(min);
+        console.log(max);
+        document.getElementById("month").setAttribute("min", min);
+        document.getElementById("month").setAttribute("max", max);
+        function loadDistrict() {
+            var x = document.getElementById("inputState");
+            console.log(x.value);
+            var htmlString = "<option value=\"\" disabled selected> Select district</option>";
+            var loc = JSON.parse('{{ loc | tojson | safe}}')
+            var optionsList=loc[x.value]
+            console.log(optionsList);
+            for (var i = 0; i < optionsList.length; i++) {
+                htmlString = htmlString + "<option value='" + optionsList[i] + "'>" + optionsList[i] + "</option>";
+            }
+            // document.getElementById('apple')
+            document.getElementById("inputDistrict").innerHTML = htmlString;
+        }
+    </script>
+</footer>
+</html>

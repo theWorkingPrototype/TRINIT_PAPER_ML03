@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Recommend</title>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/predict_styles.css') }}"> -->
+    
+</head>
+
+<body>
+    <div class="container">
+
+        <form onsubmit="{{ url_for('home') }}" method="post">
+            <input type="number" id="n" placeholder="N">
+            <input type="number" id="p" placeholder="P">
+            <input type="number" id="k" placeholder="K">
+            <input type="number" id="ph" placeholder="pH">
+            <input type="number" id="temp" placeholder="temp">
+            <input type="number" id="humidity" placeholder="humidity">
+            <input type="number" id="rain" placeholder="rain">
+            <input type="submit">
+            <input type="reset">
+    </div>
+    </form>
+    </div>
+</body>
+</html>
